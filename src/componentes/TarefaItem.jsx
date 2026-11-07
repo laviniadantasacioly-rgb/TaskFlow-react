@@ -1,4 +1,4 @@
-import styles from './TarefaItem.module.css';
+import styles from './TarefasItem.module.css';
 
 function TarefaItem({ texto, concluida, prioridade, onDeletar, onConcluir }) {
 

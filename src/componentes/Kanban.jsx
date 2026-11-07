@@ -1,292 +1,546 @@
-import "../App.css";
-import Header from "./Header";
-import axios from "axios";
-// import ListaTarefas from "./componentes/ListaTarefas";
 import { useEffect, useState } from "react";
+import Header from "./Header";
+import api, { mensagensDeErro } from "../api";
+import ModalTarefa from "./ModalTarefa";
+import ListaTarefas from "./ListaTarefas";
+import ModalPrioridade from "./ModalPrioridade";
 
 function Kanban() {
-  const [tarefas, setTarefas] = useState(() => {
-    //procura as tarefas salvas no navegador
-    const salvo = localStorage.getItem("TaskFlow.tarefas");
-    //transforma o  LocalStorage em array
-    return salvo ? JSON.parse(salvo) : []; // se não existir começa com lista vazia
-  });
+  // ==========================================
+  // TAREFAS, CARREGAMENTO E ERROS
+  // ==========================================
 
-  const [proximoId, setProximoId] = useState(() => {
-    const salvo = localStorage.getItem("TaskFlow.tarefas");
+  const [tarefas, setTarefas] = useState([]);
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
+  const [prioridades, setPrioridades] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [projetos, setProjetos] = useState([]);
 
-    if (salvo) {
-      const dados = JSON.parse(salvo);
-      return dados.length > 0 ? dados[dados.length - 1].id + 1 : 1;
-    }
+  const [modalPrioridadeAberto, setModalPrioridadeAberto] = useState(false);
+  const [prioridadeEditando, setPrioridadeEditando] = useState(null);
+  // ==========================================
+  // MODAL
+  // ==========================================
 
-    return 1;
-  });
+  const [modalAberto, setModalAberto] = useState(false);
+  const [tarefaEditando, setTarefaEditando] = useState(null);
+  const [colunaAtiva, setColunaAtiva] = useState("afazer");
 
-  const [texto, setTexto] = useState("");
-  const [prioridade, setPrioridade] = useState("media");
-  const [filtro, setFiltro] = useState("todas");
-  const [cep, setCep] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep] = useState("");
+  // ==========================================
+  // FORMULÁRIO
+  // ==========================================
 
-  useEffect(() => {
-    localStorage.setItem("TaskFlow.tarefas", JSON.stringify(tarefas));
-  }, [tarefas]);
+  // const [prioridade, setPrioridade] = useState("media");
 
-  function adicionarTarefa() {
-    if (texto.trim() === "") return;
+  async function cadastrarPrioridade(novaPrioridade) {
+    setPrioridades((atuais) => {
+      const jaExiste = atuais.some(
+        (p) =>
+          p.descricao.toLowerCase() === novaPrioridade.descricao.toLowerCase(),
+      );
 
-    const nova = {
-      id: proximoId,
-      texto: texto.trim(),
-      concluida: false,
-      prioridade: prioridade,
-      coluna: "afazer",
-      cidade: cidade,
-    };
+      if (jaExiste) return atuais;
 
-    setTarefas([...tarefas, nova]);
-    setProximoId(proximoId + 1);
-
-    setTexto("");
-    setPrioridade("media");
-    setCep("");
-    setCidade("");
-    setErroCep("");
+      return [...atuais, novaPrioridade];
+    });
   }
 
-  function moverTarefa(id, novaColuna) {
+  function abrirModalEditarPrioridade(prioridade) {
+    setPrioridadeEditando(prioridade);
+    setModalPrioridadeAberto(true);
+  }
+
+  function atualizarPrioridade(prioridadeAtualizada) {
+    setPrioridades((atuais) =>
+      atuais.map((p) =>
+        p.id === prioridadeAtualizada.id ? prioridadeAtualizada : p,
+      ),
+    );
+
+    setPrioridadeEditando(null);
+  }
+
+  // EXCLUIR PRIORIDADE
+  async function excluirPrioridade(prioridade) {
+    const confirmar = window.confirm(
+      `Deseja excluir a prioridade "${prioridade.descricao}"?`,
+    );
+
+    if (!confirmar) return;
+
+    try {
+      setErro("");
+
+      await api.delete(`/prioridades/${prioridade.id}`);
+
+      setPrioridades((atuais) => atuais.filter((p) => p.id !== prioridade.id));
+
+      if (filtroPrioridade === prioridade.descricao.toLowerCase()) {
+        setFiltroPrioridade("todas");
+      }
+    } catch (err) {
+      setErro(mensagensDeErro(err).join(" "));
+    }
+  }
+
+  // ==========================================
+  // FILTRO
+  // ==========================================
+
+  const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
+
+  // ==========================================
+  // CARREGAR TAREFAS API
+  // ==========================================
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        setCarregando(true);
+        setErro("");
+
+        const [resTarefas, resPrioridades, resUsuarios, resProjetos] =
+          await Promise.all([
+            api.get("/tarefas"),
+            api.get("/prioridades"),
+            api.get("/usuarios"),
+            api.get("/projetos"),
+          ]);
+
+        setPrioridades(resPrioridades.data);
+        setTarefas(resTarefas.data);
+        setUsuarios(resUsuarios.data);
+        setProjetos(resProjetos.data);
+      } catch (e) {
+        setErro("Erro ao carregar os dados. Verifique a conexão com a API.");
+        console.error("Erro ao carregar dados:", e);
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarDados();
+  }, []);
+
+  // ==========================================
+  // TÍTULO DA ABA
+  // ==========================================
+
+  useEffect(() => {
+    const quantidadeAFazer = tarefas.filter(
+      (tarefa) => tarefa.coluna === "afazer" || tarefa.coluna === "andamento",
+    ).length;
+
+    if (quantidadeAFazer > 0) {
+      document.title = `(${quantidadeAFazer}) TaskFlow`;
+    } else {
+      document.title = "TaskFlow";
+    }
+
+    return () => {
+      document.title = "TaskFlow";
+    };
+  }, [tarefas]);
+
+  // ==========================================
+  // ABRIR MODAL PARA CRIAR
+  // ==========================================
+
+  function abrirModalCriar(coluna) {
+    setTarefaEditando(null);
+    setColunaAtiva(coluna);
+    setModalAberto(true);
+  }
+
+  // ==========================================
+  // ABRIR MODAL PARA EDITAR
+  // ==========================================
+
+  function abrirModalEditar(tarefa) {
+    setTarefaEditando(tarefa);
+    // setColunaAtiva(tarefa.coluna);
+    setModalAberto(true);
+  }
+
+  // ==========================================
+  // SALVAR TAREFA DO MODAL -editar tarefa
+  // ==========================================
+
+  async function salvarTarefa(dados) {
+    try {
+      setErro("");
+
+      if (dados.id) {
+        const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+
+        setTarefas((tarefasAtuais) =>
+          tarefasAtuais.map((t) => (t.id === dados.id ? resposta.data : t)),
+        );
+      } else {
+        const resposta = await api.post("/tarefas", dados);
+
+        setTarefas((tarefasAtuais) => [...tarefasAtuais, resposta.data]);
+      }
+    } catch (err) {
+      const mensagens = mensagensDeErro(err);
+      setErro(mensagens.join(" "));
+      console.error("Erro ao salvar tarefa:", err);
+    }
+  }
+
+  // ==========================================
+  // EXCLUIR TAREFA
+  // ==========================================
+
+  async function deletarTarefa(id) {
+    try {
+      setErro("");
+
+      await api.delete(`/tarefas/${id}`);
+
+      setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
+    } catch (err) {
+      const mensagens = mensagensDeErro(err);
+      setErro(mensagens.join(" "));
+      console.error("Erro ao deletar tarefa:", err);
+    }
+  }
+
+  // ==========================================
+  // CONCLUIR TAREFA
+  // ==========================================
+
+  function concluirTarefa(id) {
     setTarefas(
       tarefas.map((tarefa) =>
         tarefa.id === id
           ? {
               ...tarefa,
-              coluna: novaColuna,
-              concluida: novaColuna === "concluido",
+              concluida: !tarefa.concluida,
             }
           : tarefa,
       ),
     );
   }
 
-  function deletarTarefa(id) {
-    setTarefas(tarefas.filter((tarefa) => tarefa.id !== id));
-  }
- 
+  // ==========================================
+  // MOVER TAREFA
+  // ==========================================
 
-
-  async function buscarCep(cepDigitado) {
-    const cepLimpo = cepDigitado.replace(/\D/g, "");
-
-    if (cepLimpo.length !== 8) {
-      setCidade("");
-      setErroCep("Digite um CEP válido.");
-      return;
-    }
-
-    setBuscandoCep(true);
-    setErroCep("");
-
+  async function moverTarefa(id, novaColuna) {
     try {
-      const resposta = await axios.get(
-        "https://viacep.com.br/ws/" + cepLimpo + "/json/",
+      setErro("");
+
+      const tarefa = tarefas.find((t) => t.id === id);
+
+      if (!tarefa) return;
+
+      const resposta = await api.put(`/tarefas/${id}`, {
+        ...tarefa,
+        coluna: novaColuna,
+      });
+
+      setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === id ? resposta.data : t)),
       );
-
-      console.log("Response", resposta);
-      console.log("Response Data", resposta.data);
-      console.log("Status", resposta.status);
-
-      const data = resposta.data;
-
-      if (data.erro) {
-        throw new Error("CEP não encontrado");
-      }
-
-      setCidade(data.localidade + "/" + data.uf);
-
-      console.log("Cidade:", data.localidade);
-      console.log("UF:", data.uf);
-      console.log("Logradouro:", data.logradouro);
-      console.log("Bairro:", data.bairro);
-    } catch {
-      setErroCep("CEP inválido ou não encontrado");
-      setCidade("");
-    } finally {
-      setBuscandoCep(false);
+    } catch (err) {
+      const mensagens = mensagensDeErro(err);
+      setErro(mensagens.join(" "));
+      console.error("Erro ao mover tarefa:", err);
     }
   }
+
+  // ==========================================
+  // FILTRO
+  // ==========================================
+
+  const tarefasFiltradas = tarefas.filter((tarefa) => {
+    if (filtroPrioridade === "todas") {
+      return true;
+    }
+
+    const prioridadeTarefa = prioridades.find(
+      (p) => p.id === tarefa.prioridade_id,
+    );
+
+    return prioridadeTarefa?.descricao === filtroPrioridade;
+  });
+
+  // ==========================================
+  // CONTADORES
+  // ==========================================
+
+  const totalTarefas = tarefas.length;
+
+  const tarefasPendentes = tarefas.filter(
+    (tarefa) => tarefa.coluna !== "concluido",
+  ).length;
+
+  const tarefasConcluidas = tarefas.filter(
+    (tarefa) => tarefa.coluna === "concluido",
+  ).length;
+
+  const quantidadeAFazer = tarefas.filter(
+    (tarefa) => tarefa.coluna === "afazer",
+  ).length;
+
+  const quantidadeAndamento = tarefas.filter(
+    (tarefa) => tarefa.coluna === "andamento",
+  ).length;
+
+  const quantidadeConcluido = tarefas.filter(
+    (tarefa) => tarefa.coluna === "concluido",
+  ).length;
+
+  // ==========================================
+  // JSX
+  // ==========================================
 
   return (
     <div className="conteiner">
       <Header titulo="TaskFlow" subtitulo="Gerencie suas tarefas" />
 
       <main>
-        {/* Formulário */}
-        <section id="formulario">
-          <input
-            id="input-tarefa"
-            type="text"
-            placeholder="Nova tarefa..."
-            autoComplete="off"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && adicionarTarefa()}
-          />
+        {carregando && (
+          <p style={{ textAlign: "center", color: "#94A3B8" }}>
+            Carregando tarefas...
+          </p>
+        )}
+        {erro && (
+          <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>
+        )}
 
-          <input
-            type="text"
-            placeholder="CEP (opcional)"
-            value={cep}
-            onChange={(e) => {
-              setCep(e.target.value);
-              buscarCep(e.target.value);
-            }}
-            maxLength={9}
-          />
+        <div className="filtro-prioridade">
+          <div style={{ margin: "12px 0" }}>
+            <button
+              type="button"
+              className="kanban-btn-add"
+              onClick={() => setModalPrioridadeAberto(true)}
+              style={{
+                width: "auto",
+                minWidth: "180px",
+                whiteSpace: "nowrap",
+                padding: "10px 16px",
+              }}
+            >
+              + Nova prioridade
+            </button>
+          </div>
 
-          {buscandoCep && <span>Buscando...</span>}
-          {cidade && <span>{cidade}</span>}
-          {erroCep && <span>{erroCep}</span>}
-
+          <label>Filtrar por prioridade:</label>
           <select
-            id="sel-prioridade"
-            value={prioridade}
-            onChange={(e) => setPrioridade(e.target.value)}
+            value={filtroPrioridade}
+            onChange={(e) => setFiltroPrioridade(e.target.value)}
           >
-            <option value="alta">Alta</option>
-            <option value="media">Média</option>
-            <option value="baixa">Baixa</option>
+            <option value="todas">Todas</option>
+
+            {prioridades.map((prioridade) => (
+              <option
+                key={prioridade.id}
+                value={prioridade.descricao.toLowerCase()}
+              >
+                {prioridade.descricao.charAt(0).toUpperCase() +
+                  prioridade.descricao.slice(1)}
+              </option>
+            ))}
           </select>
+        </div>
 
-          <button
-            className="btn-adicionar"
-            type="button"
-            onClick={adicionarTarefa}
-          >
-            Adicionar
-          </button>
-        </section>
-        <section id="controles">
-          <div id="filtros">
-            <button
-              className={filtro === "todas" ? "btn-filtro ativo" : "btn-filtro"}
-              onClick={() => setFiltro("todas")}
-            >
-              Todas
-            </button>
-
-            <button
-              className={
-                filtro === "pendentes" ? "btn-filtro ativo" : "btn-filtro"
-              }
-              onClick={() => setFiltro("pendentes")}
-            >
-              Pendentes
-            </button>
-
-            <button
-              className={
-                filtro === "concluidas" ? "btn-filtro ativo" : "btn-filtro"
-              }
-              onClick={() => setFiltro("concluidas")}
-            >
-              Concluídas
-            </button>
-          </div>
-
-          <div id="contadores">
-            <span id="cont-total">{tarefas.length} tarefas</span>
-
-            <span id="cont-pendentes">
-              {tarefas.filter((tarefa) => !tarefa.concluida).length} pendentes
-            </span>
-
-            <span id="cont-concluidas">
-              {tarefas.filter((tarefa) => tarefa.concluida).length} concluídas
-            </span>
-          </div>
-        </section>
-
-        {/* Kanban */}
+        {/* ==================================
+            KANBAN
+        ================================== */}
 
         <section className="kanban">
-          <section className="coluna">
-            <h2>A Fazer</h2>
-            {/* fazer essa coluna funcionar */}
-            {tarefas
-              .filter((tarefa) => tarefa.coluna === "afazer")
-              .map((tarefa) => (
-                <div key={tarefa.id} className={`card ${tarefa.prioridade}`}>
-                  <p>{tarefa.texto}</p>
-                  {tarefa.cidade && (
-                    <small className="cidade">{tarefa.cidade}</small>
-                  )}
-                  <button onClick={() => moverTarefa(tarefa.id, "andamento")}>
-                    →
-                  </button>
+          {/* ==================================
+              A FAZER
+          ================================== */}
 
-                  <button onClick={() => deletarTarefa(tarefa.id)}>🗑️</button>
-                </div>
-              ))}
-          </section>
+          <div className="kanban-coluna">
+            <div className="kanban-coluna-header">
+              <h3>A Fazer</h3>
 
-          <section className="coluna">
-            <h2>Em Andamento</h2>
-            {/* fazer essa coluna funcionar */}
-            {tarefas
-              .filter((tarefa) => tarefa.coluna === "andamento")
-              .map((tarefa) => (
-                <div key={tarefa.id} className={`card ${tarefa.prioridade}`}>
-                  <p>{tarefa.texto}</p>
+              <div className="kanban-header-acoes">
+                <span className="kanban-contador">{quantidadeAFazer}</span>
 
-                  {tarefa.cidade && (
-                    <small className="cidade">{tarefa.cidade}</small>
-                  )}
+                <button
+                  className="kanban-btn-add"
+                  onClick={() => abrirModalCriar("afazer")}
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
-                  <button onClick={() => moverTarefa(tarefa.id, "afazer")}>
-                    ←
-                  </button>
+            <ListaTarefas
+              tarefas={tarefasFiltradas.filter(
+                (tarefa) => tarefa.coluna === "afazer",
+              )}
+              prioridades={prioridades}
+              usuarios={usuarios}
+              projetos={projetos}
+              onDeletar={deletarTarefa}
+              onConcluir={concluirTarefa}
+              onEditar={abrirModalEditar}
+              onMover={moverTarefa}
+              colunaAnterior={null}
+              colunaProxima="andamento"
+            />
+          </div>
 
-                  <button onClick={() => moverTarefa(tarefa.id, "concluido")}>
-                    →
-                  </button>
+          {/* ==================================
+              EM ANDAMENTO
+          ================================== */}
 
-                  <button onClick={() => deletarTarefa(tarefa.id)}>🗑️</button>
-                </div>
-              ))}
-          </section>
+          <div className="kanban-coluna">
+            <div className="kanban-coluna-header">
+              <h3>Em Andamento</h3>
 
-          <section className="coluna">
-            <h2>Concluído</h2>
+              <div className="kanban-header-acoes">
+                <span className="kanban-contador">{quantidadeAndamento}</span>
 
-            {tarefas
-              .filter((tarefa) => tarefa.coluna === "concluido")
-              .map((tarefa) => (
-                <div key={tarefa.id} className={`card ${tarefa.prioridade}`}>
-                  <p>{tarefa.texto}</p>
+                <button
+                  className="kanban-btn-add"
+                  onClick={() => abrirModalCriar("andamento")}
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
-                  {tarefa.cidade && (
-                    <small className="cidade">{tarefa.cidade}</small>
-                  )}
+            <ListaTarefas
+              tarefas={tarefasFiltradas.filter(
+                (tarefa) => tarefa.coluna === "andamento",
+              )}
+              prioridades={prioridades}
+              usuarios={usuarios}
+              projetos={projetos}
+              onDeletar={deletarTarefa}
+              onConcluir={concluirTarefa}
+              onEditar={abrirModalEditar}
+              onMover={moverTarefa}
+              colunaAnterior="afazer"
+              colunaProxima="concluido"
+            />
+          </div>
 
-                  <button onClick={() => moverTarefa(tarefa.id, "andamento")}>
-                    ←
-                  </button>
+          {/* ==================================
+              CONCLUÍDO
+          ================================== */}
 
-                  <button onClick={() => deletarTarefa(tarefa.id)}>🗑️</button>
-                </div>
-              ))}
-          </section>
+          <div className="kanban-coluna">
+            <div className="kanban-coluna-header">
+              <h3>Concluído</h3>
+
+              <div className="kanban-header-acoes">
+                <span className="kanban-contador">{quantidadeConcluido}</span>
+
+                <button
+                  className="kanban-btn-add"
+                  onClick={() => abrirModalCriar("concluido")}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <ListaTarefas
+              tarefas={tarefasFiltradas.filter(
+                (tarefa) => tarefa.coluna === "concluido",
+              )}
+              prioridades={prioridades}
+              usuarios={usuarios}
+              projetos={projetos}
+              onDeletar={deletarTarefa}
+              onConcluir={concluirTarefa}
+              onEditar={abrirModalEditar}
+              onMover={moverTarefa}
+              colunaAnterior="andamento"
+              colunaProxima={null}
+            />
+          </div>
         </section>
+
+        {/* LEGENDA DE PRIORIDADES */}
+        <section className="legenda-prioridades">
+          <div className="legenda-prioridades-cabecalho">
+            <div>
+              <h3>Legenda de prioridades</h3>
+              <p>Consulte e gerencie as prioridades do projeto.</p>
+            </div>
+          </div>
+
+          <div className="legenda-prioridades-lista">
+            {prioridades.map((prioridade) => (
+              <div className="legenda-prioridade-item" key={prioridade.id}>
+                <span
+                  className="legenda-prioridade-cor"
+                  style={{
+                    backgroundColor: prioridade.cor || "#a00998",
+                  }}
+                />
+
+                <span className="legenda-prioridade-nome">
+                  {prioridade.descricao.charAt(0).toUpperCase() +
+                    prioridade.descricao.slice(1)}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => abrirModalEditarPrioridade(prioridade)}
+                  title="Editar prioridade"
+                  aria-label={`Editar ${prioridade.descricao}`}
+                >
+                  ✏️
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => excluirPrioridade(prioridade)}
+                  title="Excluir prioridade"
+                  aria-label={`Excluir ${prioridade.descricao}`}
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ==================================
+          MODAL
+      ================================== */}
+        <ModalTarefa
+          aberto={modalAberto}
+          onFechar={() => setModalAberto(false)}
+          onSalvar={salvarTarefa}
+          tarefa={tarefaEditando}
+          coluna={colunaAtiva}
+          prioridades={prioridades}
+          usuarios={usuarios}
+          projetos={projetos}
+        />
+        <ModalPrioridade
+          aberto={modalPrioridadeAberto}
+          onFechar={() => {
+            setModalPrioridadeAberto(false);
+            setPrioridadeEditando(null);
+          }}
+          onCadastrada={cadastrarPrioridade}
+          prioridadeEditando={prioridadeEditando}
+          onEditada={atualizarPrioridade}
+        />
       </main>
 
+      {/* ==================================
+          RODAPÉ
+      ================================== */}
+
       <footer>
-        <p>TaskFlow 2026 - Prof. Alan Glei</p>
+        <p>TaskFlow 2026 - Lavínia D Acioly</p>
       </footer>
     </div>
   );
-};
+}
 
 export default Kanban;
