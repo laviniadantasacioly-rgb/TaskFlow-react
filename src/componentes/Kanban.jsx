@@ -271,15 +271,15 @@ function Kanban() {
   // CONTADORES
   // ==========================================
 
-  const totalTarefas = tarefas.length;
+  // const totalTarefas = tarefas.length;
 
-  const tarefasPendentes = tarefas.filter(
-    (tarefa) => tarefa.coluna !== "concluido",
-  ).length;
+  // const tarefasPendentes = tarefas.filter(
+  //   (tarefa) => tarefa.coluna !== "concluido",
+  // ).length;
 
-  const tarefasConcluidas = tarefas.filter(
-    (tarefa) => tarefa.coluna === "concluido",
-  ).length;
+  // const tarefasConcluidas = tarefas.filter(
+  //   (tarefa) => tarefa.coluna === "concluido",
+  // ).length;
 
   const quantidadeAFazer = tarefas.filter(
     (tarefa) => tarefa.coluna === "afazer",
