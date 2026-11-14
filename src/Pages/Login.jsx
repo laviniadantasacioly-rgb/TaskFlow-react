@@ -20,7 +20,7 @@ function Login() {
     try {
       const resposta = await api.post("/auth/login", {
         email,
-        senha_hash: senha,
+        senha,
       });
 
       const { token, usuario } = resposta.data;
@@ -42,7 +42,9 @@ function Login() {
       <div className={`login-card ${shake ? "shake" : ""}`}>
         <h1 className="login-logo">TaskFlow</h1>
 
-        <p className="login-subtitulo">Faça login para continuar</p>
+        <p className="login-subtitulo">
+          Faça login para continuar
+        </p>
 
         <input
           className="login-input"
@@ -63,7 +65,10 @@ function Login() {
 
         {erro && <p className="login-erro">{erro}</p>}
 
-        <button className="login-btn" onClick={handleLogin}>
+        <button
+          className="login-btn"
+          onClick={handleLogin}
+        >
           Entrar
         </button>
 
