@@ -1,58 +1,114 @@
+/* ==============================
+   PÁGINA SOBRE - TASKFLOW
+   Tema dark elegante
+============================== */
+
 .sobre {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
   padding: 40px;
-  background-color: #c187c9;
+
+  background-color: #19161f;
+  border: 1px solid #443750;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  color: #333;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+
+  color: #f8f7fa;
   line-height: 1.6;
 }
+
+/* Título principal */
 .sobre h1 {
   margin-bottom: 20px;
-  color: rgb(99, 11, 107);
+
+  color: #c4b5fd;
   font-size: 32px;
   text-align: center;
 }
 
+/* Parágrafos */
 .sobre p {
   margin-bottom: 20px;
   font-size: 16px;
+  color: #b9b2c6;
 }
 
+/* Subtítulos */
 .sobre h2 {
   margin-top: 30px;
   margin-bottom: 15px;
-  color: rgb(99, 11, 107);
+
+  color: #c4b5fd;
   font-size: 22px;
-  border-bottom: 2px solid rgb(99, 11, 107);
+
+  border-bottom: 2px solid #7c3aed;
   padding-bottom: 8px;
 }
 
+/* Lista */
 .sobre ul {
   margin: 0;
   padding: 0;
+
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+
+  list-style: none;
 }
 
+/* Itens da lista */
 .sobre li {
   padding: 12px 16px;
-  background-color: rgb(245, 235, 247);
-  border-left: 4px solid rgb(99, 11, 107);
+
+  background-color: #24212b;
+  border: 1px solid #443750;
+  border-left: 4px solid #7c3aed;
   border-radius: 8px;
-  color: rgb(70, 20, 75);
+
+  color: #e9ddff;
   font-weight: 600;
-  transition: 0.2s;
+
+  transition: 0.2s ease;
 }
 
+.sobre li:hover {
+  background-color: #30283d;
+  border-left-color: #a78bfa;
+  transform: translateY(-2px);
+}
 
+/* Último subtítulo */
 .sobre h2:last-of-type {
   margin-top: 35px;
 }
-.sobre p {
+
+/* Parágrafo final */
+.sobre p:last-child {
   margin-bottom: 0;
   font-weight: 600;
-  color: rgb(99, 11, 107);
+  color: #c4b5fd;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .sobre {
+    width: 95%;
+    padding: 24px 18px;
+    margin: 24px auto;
+  }
+
+  .sobre h1 {
+    font-size: 26px;
+  }
+
+  .sobre h2 {
+    font-size: 20px;
+  }
+
+  .sobre ul {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,7 +1,10 @@
+
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Sobre from "./Pages/Sobre";
 import Login from "./Pages/Login";
+import Projetos from "./Pages/Projetos";
+import ProjetoTarefas from "./Pages/ProjetoTarefas";
 import Sidebar from "./componentes/Sidebar";
 import RotaPrivada from "./componentes/RotaPrivada";
 import Kanban from "./componentes/Kanban";
@@ -28,9 +31,31 @@ function App() {
             }
           />
 
+          <Route
+            path="/projetos"
+            element={
+              <RotaPrivada>
+                <Projetos />
+              </RotaPrivada>
+            }
+          />
+
+          <Route
+            path="/projetos/:id/tarefas"
+            element={
+              <RotaPrivada>
+                <ProjetoTarefas />
+              </RotaPrivada>
+            }
+          />
+
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<h1>Página não encontrada</h1>} />
+
+          <Route
+            path="*"
+            element={<h1>Página não encontrada</h1>}
+          />
         </Routes>
       </main>
     </div>

@@ -1,0 +1,203 @@
+
+.container {
+  width: 100%;
+  min-height: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+  color: #f5f3ff;
+  background: #111015;
+}
+
+/* Botão voltar */
+.botaoVoltar {
+  border: none;
+  background: transparent;
+  color: #a78bfa;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 22px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.botaoVoltar:hover {
+  color: #c4b5fd;
+}
+
+/* Card principal do projeto */
+.cardProjeto {
+  background: #1c1923;
+  border: 1px solid #352d42;
+  border-radius: 16px;
+  padding: 26px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 32px;
+}
+
+/* Cabeçalho do projeto */
+.cabecalhoProjeto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.etiqueta {
+  color: #a78bfa;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.cabecalhoProjeto h1 {
+  color: #c4b5fd;
+  font-size: 27px;
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+
+/* Total de tarefas */
+.totalTarefas {
+  background: #2a2040;
+  color: #c4b5fd;
+  border: 1px solid #49336e;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Descrição */
+.descricao {
+  color: #c4bfce;
+  line-height: 1.6;
+  margin: 12px 0 20px;
+  overflow-wrap: anywhere;
+}
+
+/* Informações do projeto */
+.informacoesProjeto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 35px;
+  padding: 16px 0;
+  border-top: 1px solid #40384d;
+  border-bottom: 1px solid #40384d;
+}
+
+.informacoesProjeto div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.informacoesProjeto span {
+  color: #a78bfa;
+  font-size: 12px;
+}
+
+.informacoesProjeto strong {
+  color: #f5f3ff;
+  font-size: 14px;
+}
+
+/* Resumo das tarefas */
+.resumoTarefas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.resumoItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 15px;
+  border: 1px solid #40334f;
+  border-radius: 10px;
+  background: #25202f;
+}
+
+.resumoItem strong {
+  color: #a78bfa;
+  font-size: 25px;
+}
+
+.resumoItem span {
+  color: #c4bfce;
+  font-size: 13px;
+}
+
+/* Título do Kanban */
+.tituloKanban {
+  margin-bottom: 18px;
+}
+
+.tituloKanban h2 {
+  color: #c4b5fd;
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.tituloKanban p {
+  color: #b9b3c9;
+  margin: 0;
+}
+
+/* Kanban do projeto */
+.kanbanProjeto {
+  align-items: stretch;
+}
+
+/* Nesta tela as tarefas são somente para visualização */
+.kanbanProjeto :global(.acoes) {
+  display: none;
+}
+
+/* Mensagem de erro */
+.erro {
+  color: #fca5a5;
+  background: #351d25;
+  border: 1px solid #71333d;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+  .container {
+    padding: 18px;
+  }
+
+  .cabecalhoProjeto {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .resumoTarefas {
+    gap: 8px;
+  }
+
+  .resumoItem {
+    padding: 12px 5px;
+    text-align: center;
+  }
+
+  .resumoItem span {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 400px) {
+  .resumoTarefas {
+    grid-template-columns: 1fr;
+  }
+
+  .cardProjeto {
+    padding: 18px;
+  }
+}

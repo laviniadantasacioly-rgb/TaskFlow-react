@@ -1,6 +1,44 @@
-/* ========================= */
-/* KANBAN                    */
-/* ========================= */
+/* ========================================
+   TASKFLOW - TEMA DARK ROXO
+======================================== */
+
+:root {
+  --tf-fundo: #111015;
+  --tf-superficie: #19161f;
+  --tf-superficie-elevada: #24212b;
+  --tf-card: #2b2634;
+  --tf-borda: #443750;
+  --tf-roxo: #7c3aed;
+  --tf-roxo-hover: #8b5cf6;
+  --tf-roxo-claro: #c4b5fd;
+  --tf-texto: #f8f7fa;
+  --tf-texto-secundario: #b9b2c6;
+}
+
+/* ========================================
+   CONFIGURAÇÕES GERAIS
+======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--tf-fundo);
+  color: var(--tf-texto);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ========================================
+   KANBAN
+======================================== */
 
 .kanban {
   width: 100%;
@@ -9,138 +47,94 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
-  
 }
 
-/* ========================= */
-/* COLUNAS                   */
-/* ========================= */
+/* ========================================
+   COLUNAS
+======================================== */
 
 .kanban-coluna {
   width: 100%;
   min-width: 0;
   min-height: 400px;
-
   background: linear-gradient(
     180deg,
-    #4d0758 0%,
-    #3b0647 100%
+    #211b2b 0%,
+    #19161f 100%
   );
-
-  border: 1px solid #8e2a9e;
+  border: 1px solid var(--tf-borda);
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 6px 18px rgba(35, 0, 45, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
-
-/* ========================= */
-/* CABEÇALHO DA COLUNA       */
-/* ========================= */
+/* ========================================
+   CABEÇALHO DAS COLUNAS
+======================================== */
 
 .kanban-coluna-header {
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 10px;
-
   margin-bottom: 16px;
-
   padding-bottom: 10px;
-
-  border-bottom: 1px solid #7c258c;
+  border-bottom: 1px solid var(--tf-borda);
 }
-
-
-/* Nome da coluna */
 
 .kanban-coluna-header h3 {
   margin: 0;
-
-  color: #ffffff;
-
+  color: var(--tf-texto);
   font-size: 19px;
   font-weight: 700;
-
   line-height: 1.2;
-
   text-align: left;
 }
 
-
-/* Área contador + botão */
-
 .kanban-header-acoes {
   display: flex;
-
   align-items: center;
-
   gap: 8px;
 }
 
-
-/* Contador */
-
 .kanban-contador {
   min-width: 25px;
-
   padding: 4px 7px;
-
   border-radius: 6px;
-
-  background-color: #73177d;
-
-  color: #ffffff;
-
+  background-color: var(--tf-roxo);
+  color: #fff;
   font-size: 13px;
-
   font-weight: bold;
-
   text-align: center;
 }
 
-
-/* ========================= */
-/* BOTÃO +                   */
-/* ========================= */
+/* ========================================
+   BOTÃO ADICIONAR NA COLUNA
+======================================== */
 
 .kanban-btn-add {
   flex-shrink: 0;
-
   width: 32px;
   height: 32px;
-
   padding: 0;
-
-  border: 2px solid #f5a6ff;
-
+  border: 1px solid var(--tf-roxo-claro);
   border-radius: 7px;
-
-  background-color: #a00998;
-
-  color: white;
-
+  background-color: var(--tf-roxo);
+  color: #fff;
   font-size: 21px;
   font-weight: bold;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
 .kanban-btn-add:hover {
-  background-color: #d31bc7;
-
-  border-color: #ffffff;
-
+  background-color: var(--tf-roxo-hover);
+  border-color: #fff;
   transform: scale(1.05);
 }
 
@@ -148,121 +142,83 @@
   transform: scale(0.95);
 }
 
-
-/* ========================= */
-/* LISTA DE TAREFAS          */
-/* ========================= */
+/* ========================================
+   LISTA DE TAREFAS
+======================================== */
 
 .lista-tarefas {
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
   gap: 10px;
 }
 
-
-/* ========================= */
-/* MENSAGEM VAZIA            */
-/* ========================= */
+/* ========================================
+   MENSAGEM DE LISTA VAZIA
+======================================== */
 
 .msg-vazia {
   width: 100%;
-
   text-align: center;
-
-  color: #e8cce9;
-
+  color: var(--tf-texto-secundario);
   margin-top: 25px;
-
   line-height: 1.4;
-
   font-size: 14px;
 }
 
-
-/* ========================= */
-/* CARDS                     */
-/* ========================= */
+/* ========================================
+   CARDS
+======================================== */
 
 .card {
   width: 100%;
-
   background: linear-gradient(
     135deg,
-    #2f1738,
-    #351b40
+    #2b2634,
+    #332b40
   );
-
-  border: 1px solid #71347c;
-
-  border-left: 5px solid #a00998;
-
+  border: 1px solid var(--tf-borda);
+  border-left: 5px solid var(--tf-roxo);
   border-radius: 8px;
-
   padding: 11px;
-
   margin: 0;
-
   display: flex;
   flex-direction: column;
-
   gap: 7px;
-
   transition: 0.2s;
 }
 
 .card:hover {
   transform: translateY(-2px);
-
-  border-color: #a943b8;
-
-  box-shadow: 0 5px 12px rgba(170, 20, 180, 0.25);
+  border-color: var(--tf-roxo-hover);
+  box-shadow: 0 5px 12px rgba(124, 58, 237, 0.2);
 }
-
-
-/* ========================= */
-/* TEXTO DA TAREFA           */
-/* ========================= */
 
 .card p {
   width: 100%;
-
   margin: 0;
-
-  color: #ffffff;
-
+  color: var(--tf-texto);
   font-weight: 500;
-
   font-size: 15px;
-
   line-height: 1.35;
-
   overflow-wrap: anywhere;
 }
 
-
-/* ========================= */
-/* CIDADE                    */
-/* ========================= */
+/* ========================================
+   CIDADE
+======================================== */
 
 .card .cidade {
   display: block;
-
   margin: 0;
-
   font-size: 12px;
-
-  color: #f29df5;
-
+  color: var(--tf-roxo-claro);
   font-style: italic;
 }
 
-
-/* ========================= */
-/* PRIORIDADES               */
-/* ========================= */
+/* ========================================
+   CORES DAS PRIORIDADES
+======================================== */
 
 .card.alta {
   border-left: 6px solid #ff3b30;
@@ -276,63 +232,38 @@
   border-left: 6px solid #34c759;
 }
 
-
-/* ========================= */
-/* ÁREA DOS BOTÕES           */
-/* ========================= */
+/* ========================================
+   AÇÕES DOS CARDS
+======================================== */
 
 .acoes {
   width: 100%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: flex-end;
-
   gap: 5px;
-
   margin-top: 3px;
 }
 
-
-/* ========================= */
-/* BOTÕES DO CARD             */
-/* ========================= */
-
 .card button {
   min-width: 30px;
-
   height: 28px;
-
   padding: 4px 7px;
-
-  border: 1px solid #75327f;
-
+  border: 1px solid var(--tf-borda);
   border-radius: 5px;
-
   cursor: pointer;
-
-  background-color: #54135f;
-
-  color: white;
-
+  background-color: #382b49;
+  color: #fff;
   font-size: 13px;
-
   display: inline-flex;
-
   align-items: center;
-
   justify-content: center;
-
   transition: 0.2s;
 }
 
 .card button:hover {
-  background-color: #a00998;
-
-  border-color: #e17ce7;
-
+  background-color: var(--tf-roxo);
+  border-color: var(--tf-roxo-claro);
   transform: scale(1.05);
 }
 
@@ -340,201 +271,152 @@
   transform: scale(0.95);
 }
 
-
-/* ========================= */
-/* FILTRO                    */
-/* ========================= */
+/* ========================================
+   FILTRO DE PRIORIDADE
+======================================== */
 
 .filtro-prioridade {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
-  margin: 15px 0;
+  margin: 15px 0 20px;
 }
 
 .filtro-prioridade label {
   font-size: 14px;
-
-  color: white;
+  font-weight: 600;
+  color: var(--tf-texto);
 }
 
+.filtro-prioridade select,
 #filtro-prioridade {
-  padding: 8px 10px;
-
-  border: 1px solid #873092;
-
+  padding: 8px 12px;
+  border: 1px solid var(--tf-borda);
   border-radius: 6px;
-
+  background-color: var(--tf-superficie-elevada);
+  color: var(--tf-texto);
+  font-size: 14px;
+  cursor: pointer;
   outline: none;
-
-  background-color: #3d1647;
-
-  color: white;
+  transition: 0.2s;
 }
 
+.filtro-prioridade select:focus,
+#filtro-prioridade:focus {
+  border-color: var(--tf-roxo-hover);
+}
 
-/* ========================= */
-/* CONTADORES                */
-/* ========================= */
+/* ========================================
+   CONTADORES
+======================================== */
 
 #contadores {
   width: 100%;
-
   max-width: 900px;
-
   margin: 20px auto;
-
   display: flex;
-
   justify-content: center;
-
   align-items: center;
-
   gap: 12px;
-
   flex-wrap: wrap;
 }
 
 #contadores span {
   background: linear-gradient(
     135deg,
-    #64126e,
-    #8c167f
+    #382454,
+    #5b21b6
   );
-
   padding: 9px 17px;
-
-  border: 1px solid #a943b8;
-
+  border: 1px solid var(--tf-roxo);
   border-radius: 8px;
-
-  color: white;
-
+  color: #fff;
   font-size: 14px;
-
   font-weight: bold;
-
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
-
-/* ========================= */
-/* FORMULÁRIO                */
-/* ========================= */
+/* ========================================
+   FORMULÁRIO
+======================================== */
 
 #formulario {
   width: 100%;
-
   max-width: 1100px;
-
   margin: 20px auto;
-
   display: flex;
-
   gap: 10px;
-
   align-items: center;
-
   flex-wrap: wrap;
 }
 
 #input-tarefa {
   flex: 1;
-
   min-width: 220px;
-
   padding: 10px 12px;
-
   border-radius: 7px;
-
-  border: 1px solid #8e2a9e;
-
+  border: 1px solid var(--tf-borda);
   outline: none;
-
-  background-color: #35133d;
-
-  color: white;
+  background-color: var(--tf-superficie-elevada);
+  color: #fff;
 }
 
 #input-tarefa::placeholder {
-  color: #c9a8cc;
+  color: var(--tf-texto-secundario);
 }
 
 #input-tarefa:focus {
-  border-color: #e25bdb;
-
-  box-shadow: 0 0 0 2px rgba(226, 91, 219, 0.15);
+  border-color: var(--tf-roxo-hover);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.15);
 }
 
 #formulario input[type="text"] {
   padding: 10px 12px;
-
   border-radius: 7px;
-
-  border: 1px solid #8e2a9e;
-
+  border: 1px solid var(--tf-borda);
   outline: none;
-
-  background-color: #35133d;
-
-  color: white;
+  background-color: var(--tf-superficie-elevada);
+  color: #fff;
 }
 
 #formulario input[type="text"]::placeholder {
-  color: #c9a8cc;
+  color: var(--tf-texto-secundario);
 }
 
 #sel-prioridade {
   padding: 10px;
-
   border-radius: 7px;
-
-  border: 1px solid #8e2a9e;
-
+  border: 1px solid var(--tf-borda);
   outline: none;
-
-  background-color: #35133d;
-
-  color: white;
+  background-color: var(--tf-superficie-elevada);
+  color: #fff;
 }
 
-
-/* ========================= */
-/* BOTÃO ADICIONAR           */
-/* ========================= */
+/* ========================================
+   BOTÃO ADICIONAR
+======================================== */
 
 .btn-adicionar {
   padding: 10px 18px;
-
   border: none;
-
   border-radius: 7px;
-
   background: linear-gradient(
     135deg,
-    #a00998,
-    #c51caf
+    #6d28d9,
+    #8b5cf6
   );
-
   color: white;
-
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.3s;
 }
 
 .btn-adicionar:hover {
   background: linear-gradient(
     135deg,
-    #c51caf,
-    #e02bd0
+    #7c3aed,
+    #a78bfa
   );
-
   transform: translateY(-1px);
 }
 
@@ -542,79 +424,61 @@
   transform: scale(0.98);
 }
 
-
-/* ========================= */
-/* CEP                       */
-/* ========================= */
+/* ========================================
+   CEP
+======================================== */
 
 #formulario span {
   font-size: 13px;
-
-  color: #f0c8f2;
+  color: var(--tf-texto-secundario);
 }
 
-
-/* ========================= */
-/* LISTA ANTIGA              */
-/* ========================= */
+/* ========================================
+   LISTA ANTIGA
+======================================== */
 
 #lista-tarefas {
   list-style: none;
-
   margin-top: 20px;
 }
 
-
-/* ========================= */
-/* RODAPÉ                    */
-/* ========================= */
+/* ========================================
+   RODAPÉ
+======================================== */
 
 footer {
   width: 100%;
-
   padding: 16px;
-
   text-align: center;
-
-  color: #c6a7c9;
-
-  border-top: 1px solid #7d2589;
-
+  color: var(--tf-texto-secundario);
+  border-top: 1px solid var(--tf-borda);
   margin-top: 30px;
 }
 
-
-/* ========================= */
-/* PÁGINA SOBRE              */
-/* ========================= */
+/* ========================================
+   PÁGINA SOBRE
+======================================== */
 
 .sobre {
   padding: 40px;
-
   max-width: 900px;
-
   margin: 0 auto;
 }
 
 .sobre h1 {
   margin-bottom: 20px;
-
   text-align: center;
-
-  color: #f19af5;
+  color: var(--tf-roxo-claro);
 }
 
 .sobre h2 {
   margin-top: 30px;
-
   margin-bottom: 15px;
-
-  color: #e27ce7;
+  color: var(--tf-roxo-hover);
 }
 
 .sobre p {
   line-height: 1.6;
-
   margin-bottom: 10px;
 }
 
@@ -626,188 +490,38 @@ footer {
   margin-bottom: 8px;
 }
 
-
-/* ========================= */
-/* LAYOUT DA SIDEBAR         */
-/* ========================= */
+/* ========================================
+   LAYOUT DA SIDEBAR
+======================================== */
 
 .app-layout {
   min-height: 100vh;
-
   width: 100%;
+  background-color: var(--tf-fundo);
 }
 
 .app-conteudo {
   margin-left: 220px;
-
   width: calc(100% - 220px);
-
   min-height: 100vh;
-
   padding: 0;
+  background-color: var(--tf-fundo);
 }
 
-
-/* ========================= */
-/* CENTRALIZAÇÃO DO CONTEÚDO */
-/* ========================= */
+/* ========================================
+   CENTRALIZAÇÃO DO CONTEÚDO
+======================================== */
 
 .app-conteudo main {
   width: 100%;
-
   max-width: 1400px;
-
   margin: 0 auto;
-
   padding: 25px 35px;
 }
 
-
-/* ========================= */
-/* RESPONSIVO                */
-/* ========================= */
-
-@media (max-width: 1100px) {
-
-  .app-conteudo main {
-    padding: 25px 20px;
-  }
-
-  .kanban {
-    gap: 14px;
-  }
-
-  .kanban-coluna {
-    padding: 12px;
-  }
-
-  .kanban-coluna-header h3 {
-    font-size: 17px;
-  }
-}
-
-
-/* ========================= */
-/* TABLET                    */
-/* ========================= */
-
-@media (max-width: 800px) {
-
-  .app-conteudo {
-    margin-left: 220px;
-
-    width: calc(100% - 220px);
-  }
-
-  .app-conteudo main {
-    padding: 20px 15px;
-  }
-
-  .kanban {
-    grid-template-columns: 1fr;
-  }
-
-  .kanban-coluna {
-    min-height: 250px;
-  }
-
-  #formulario {
-    flex-direction: column;
-
-    align-items: stretch;
-  }
-
-  #input-tarefa,
-  #formulario input[type="text"],
-  #sel-prioridade,
-  .btn-adicionar {
-    width: 100%;
-  }
-
-  .filtro-prioridade {
-    flex-direction: column;
-
-    align-items: stretch;
-  }
-
-  #filtro-prioridade {
-    width: 100%;
-  }
-
-  #contadores {
-    flex-direction: column;
-
-    gap: 8px;
-  }
-
-  #contadores span {
-    width: 100%;
-
-    text-align: center;
-  }
-}
-
-
-/* ========================= */
-/* CELULAR                   */
-/* ========================= */
-
-@media (max-width: 500px) {
-
-  .app-conteudo {
-    margin-left: 0;
-
-    width: 100%;
-  }
-
-  .app-conteudo main {
-    padding: 15px 10px;
-  }
-
-  .kanban-coluna-header h3 {
-    font-size: 16px;
-  }
-
-  .kanban-btn-add {
-    width: 30px;
-
-    height: 30px;
-  }
-
-  .card p {
-    font-size: 14px;
-  }
-
-  .sobre {
-    padding: 25px 15px;
-  }
-}
-
-.filtro-prioridade {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 15px 0 20px;
-}
-
-.filtro-prioridade select {
-  padding: 8px 12px;
-  border: 1px solid #550255;
-  border-radius: 6px;
-  background-color: rgb(166, 83, 173);
-  color: #f0c8f2;
-  font-size: 14px;
-  cursor: pointer;
-  outline: none;
-  transition: 0.2s;
-}
-
-
-.filtro-prioridade label {
-  font-size: 15px;
-  font-weight: 600;
-  color: #f0c8f2;
-}
+/* ========================================
+   DETALHES DA TAREFA
+======================================== */
 
 .detalhes-tarefa {
   display: flex;
@@ -815,11 +529,14 @@ footer {
   gap: 4px;
   margin-top: 8px;
   font-size: 12px;
-  opacity: 0.85;
+  color: var(--tf-texto-secundario);
+  opacity: 0.9;
 }
 
+/* ========================================
+   ETIQUETAS DE PRIORIDADE
+======================================== */
 
-/* ETIQUETA DE PRIORIDADE */
 .card .prioridade {
   display: inline-block;
   align-self: flex-start;
@@ -831,30 +548,30 @@ footer {
   font-weight: 700;
 }
 
-/* ALTA - VERMELHO */
 .card .prioridade-alta {
   background-color: #fee2e2;
   color: #b91c1c;
 }
 
-/* MÉDIA - AMARELO */
 .card .prioridade-media {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-/* BAIXA - VERDE */
 .card .prioridade-baixa {
   background-color: #dcfce7;
   color: #166534;
 }
 
-/* LEGENDA DE PRIORIDADES */
+/* ========================================
+   LEGENDA DE PRIORIDADES
+======================================== */
+
 .legenda-prioridades {
   margin-top: 28px;
   padding: 20px;
-  background: rgba(53, 27, 64, 0.65);
-  border: 1px solid #71347c;
+  background: var(--tf-superficie);
+  border: 1px solid var(--tf-borda);
   border-radius: 12px;
 }
 
@@ -874,7 +591,7 @@ footer {
 
 .legenda-prioridades-cabecalho p {
   margin: 0;
-  color: #cbb8d3;
+  color: var(--tf-texto-secundario);
   font-size: 13px;
 }
 
@@ -889,8 +606,8 @@ footer {
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  background: rgba(36, 19, 42, 0.8);
-  border: 1px solid #56315f;
+  background: var(--tf-superficie-elevada);
+  border: 1px solid var(--tf-borda);
   border-radius: 8px;
   color: #fff;
 }
@@ -909,6 +626,115 @@ footer {
 .legenda-prioridade-item button {
   border: none;
   background: transparent;
+  color: var(--tf-texto);
   cursor: pointer;
   padding: 4px;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 1100px) {
+  .app-conteudo main {
+    padding: 25px 20px;
+  }
+
+  .kanban {
+    gap: 14px;
+  }
+
+  .kanban-coluna {
+    padding: 12px;
+  }
+
+  .kanban-coluna-header h3 {
+    font-size: 17px;
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 800px) {
+  .app-conteudo {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+
+  .app-conteudo main {
+    padding: 20px 15px;
+  }
+
+  .kanban {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-coluna {
+    min-height: 250px;
+  }
+
+  #formulario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #input-tarefa,
+  #formulario input[type="text"],
+  #sel-prioridade,
+  .btn-adicionar {
+    width: 100%;
+  }
+
+  .filtro-prioridade {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #filtro-prioridade {
+    width: 100%;
+  }
+
+  #contadores {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #contadores span {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ========================================
+   CELULAR
+======================================== */
+
+@media (max-width: 500px) {
+  .app-conteudo {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .app-conteudo main {
+    padding: 15px 10px;
+  }
+
+  .kanban-coluna-header h3 {
+    font-size: 16px;
+  }
+
+  .kanban-btn-add {
+    width: 30px;
+    height: 30px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+
+  .sobre {
+    padding: 25px 15px;
+  }
 }

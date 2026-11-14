@@ -1,57 +1,102 @@
+/* ==============================
+   MODAL DE TAREFA - TASKFLOW
+   Tema dark roxo
+============================== */
+
+/* Fundo escuro atrás do modal */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 16px;
   z-index: 9999;
 }
 
+/* ==============================
+   CARD DO MODAL
+============================== */
+
 .card {
-  background: #53035c;
-  border: 1px solid #dd0fdd;
+  background-color: #19161f;
+  border: 1px solid #62458a;
   border-radius: 12px;
+
   padding: 28px 32px;
+
   width: 100%;
   max-width: 420px;
+
   display: flex;
   flex-direction: column;
   gap: 14px;
+
   box-sizing: border-box;
+
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
 }
 
+/* Título */
 .card h2 {
-  color: #ddd;
+  color: #c4b5fd;
   font-size: 1.2rem;
   margin: 0 0 5px;
 }
+
+/* ==============================
+   CAMPOS
+============================== */
 
 .card input,
 .card select {
   width: 100%;
   box-sizing: border-box;
-  background: #270d2a;
-  color: #e2e8f0;
-  border: 1px solid #8d5e8f;
+
+  background-color: #24212b;
+  color: #f8f7fa;
+
+  border: 1px solid #443750;
   border-radius: 6px;
+
   padding: 10px 14px;
+
   font-size: 1rem;
   font-family: inherit;
+
   outline: none;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card input::placeholder {
+  color: #8f879c;
 }
 
 .card input:focus,
 .card select:focus {
-  border-color: #f838e8;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
 }
 
+/* ==============================
+   CIDADE / INFORMAÇÃO
+============================== */
+
 .cidade {
-  color: #a7a9ac;
+  color: #a8a0b5;
   font-size: 0.8rem;
   margin: -5px 0 0;
 }
+
+/* ==============================
+   BOTÕES
+============================== */
 
 .botoes {
   display: flex;
@@ -62,32 +107,59 @@
 
 .botoes button {
   display: block;
+
   padding: 9px 18px;
+
   border-radius: 6px;
+
   font-size: 1rem;
   font-family: inherit;
+
   cursor: pointer;
+
   transition: 0.2s;
 }
 
+/* Cancelar */
 .botoes button:first-child {
-  background: transparent;
-  border: 1px solid #a514aa;
-  color: #94a3b8;
+  background-color: transparent;
+  border: 1px solid #62458a;
+  color: #c4b5fd;
 }
 
 .botoes button:first-child:hover {
-  background: #ec1124;
+  background-color: #30283d;
+  border-color: #8b5cf6;
   color: white;
 }
 
+/* Salvar */
 .botoes button:last-child {
-  background: #a30481;
+  background-color: #7c3aed;
   color: white;
+
   border: none;
   font-weight: 700;
 }
 
 .botoes button:last-child:hover {
-  background: #86227e;
+  background-color: #8b5cf6;
+}
+
+/* ==============================
+   RESPONSIVIDADE
+============================== */
+
+@media (max-width: 500px) {
+  .card {
+    padding: 24px 20px;
+  }
+
+  .botoes {
+    flex-direction: column-reverse;
+  }
+
+  .botoes button {
+    width: 100%;
+  }
 }

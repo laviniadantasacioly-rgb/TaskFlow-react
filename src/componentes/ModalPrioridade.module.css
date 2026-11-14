@@ -1,24 +1,39 @@
+/* ==============================
+   MODAL DE PRIORIDADE - TASKFLOW
+   Tema dark roxo
+============================== */
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 8, 20, 0.78);
+
+  background: rgba(0, 0, 0, 0.78);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 20px;
   z-index: 1000;
 }
 
+/* ==============================
+   CARD
+============================== */
+
 .card {
   width: 100%;
   max-width: 420px;
-  background: linear-gradient(135deg, #2f1738, #351b40);
-  border: 1px solid #71347c;
+
+  background: linear-gradient(135deg, #19161f, #24212b);
+  border: 1px solid #62458a;
   border-radius: 12px;
+
   padding: 24px;
-  color: #f8f0fa;
+  color: #f8f7fa;
+
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -26,9 +41,13 @@
 
 .card h2 {
   margin: 0;
-  color: #ffffff;
+  color: #c4b5fd;
   font-size: 22px;
 }
+
+/* ==============================
+   CAMPOS
+============================== */
 
 .campo {
   display: flex;
@@ -37,7 +56,7 @@
 }
 
 .campo label {
-  color: #e9d9ef;
+  color: #e9ddff;
   font-size: 14px;
   font-weight: 600;
 }
@@ -45,42 +64,58 @@
 .campo input:not([type="color"]) {
   width: 100%;
   box-sizing: border-box;
+
   padding: 11px 12px;
-  border: 1px solid #71347c;
+
+  border: 1px solid #443750;
   border-radius: 7px;
-  background: #24132a;
+
+  background: #24212b;
   color: #ffffff;
+
   font-size: 14px;
   outline: none;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.campo input:focus {
-  border-color: #c084fc;
-  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.15);
+.campo input:not([type="color"]):focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
 }
 
 .campo input[type="color"] {
   width: 64px;
   height: 42px;
+
   padding: 3px;
-  background: #24132a;
-  border: 1px solid #71347c;
+
+  background: #24212b;
+  border: 1px solid #62458a;
   border-radius: 7px;
+
   cursor: pointer;
 }
 
 .campo span {
-  color: #cbb8d3;
+  color: #a8a0b5;
   font-size: 13px;
 }
+
+/* ==============================
+   MENSAGENS DE ERRO
+============================== */
 
 .erros {
   margin: 0;
   padding: 10px 12px 10px 30px;
+
   border: 1px solid #ef4444;
   border-radius: 7px;
+
   background: rgba(239, 68, 68, 0.1);
   color: #fca5a5;
+
   font-size: 13px;
 }
 
@@ -89,6 +124,10 @@
   color: #fca5a5;
   font-size: 13px;
 }
+
+/* ==============================
+   BOTÕES
+============================== */
 
 .botoes {
   display: flex;
@@ -99,30 +138,42 @@
 
 .botoes button {
   padding: 10px 16px;
-  border: 1px solid #71347c;
+
+  border: 1px solid #62458a;
   border-radius: 7px;
-  background: #45204f;
+
+  background: #30283d;
   color: #ffffff;
+
   font-size: 14px;
   font-weight: 600;
+
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+
+  transition: background-color 0.2s, transform 0.2s;
 }
 
+/* Botão principal */
 .botoes button:last-child {
-  background: #a00998;
-  border-color: #a00998;
+  background: #7c3aed;
+  border-color: #7c3aed;
 }
 
+/* Efeito ao passar o mouse */
 .botoes button:hover:not(:disabled) {
   filter: brightness(1.15);
   transform: translateY(-1px);
 }
 
+/* Botões desabilitados */
 .botoes button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ==============================
+   RESPONSIVIDADE
+============================== */
 
 @media (max-width: 480px) {
   .card {

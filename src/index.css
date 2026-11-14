@@ -1,126 +1,290 @@
-*{ box-sizing: border-box; margin: 0; padding: 0;}
+/* ==============================
+   TEMA GLOBAL - TASKFLOW
+   Dark elegante: roxo, preto e branco
+============================== */
 
-body{
-   background-color: rgb(99, 11, 107);
-    color: rgb(250, 250, 250);
-    font-family: 'Inter', Arial, sans-serif;
-    font-size: 16px;
-    min-height: 100vh;
+:root {
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  color: #f8f7fa;
+  background-color: #111015;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --tf-fundo: #111015;
+  --tf-superficie: #19161f;
+  --tf-superficie-elevada: #24212b;
+  --tf-card: #2b2634;
+  --tf-borda: #443750;
+
+  --tf-roxo: #7c3aed;
+  --tf-roxo-hover: #8b5cf6;
+  --tf-roxo-claro: #c4b5fd;
+
+  --tf-texto: #f8f7fa;
+  --tf-texto-secundario: #b9b2c6;
 }
-header{
-    text-align: center;
-    padding: 24px 32px;
-    border-bottom: 1px solid #067956;
+
+/* ==============================
+   RESET
+============================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+
+  background-color: var(--tf-fundo);
+  color: var(--tf-texto);
+
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 16px;
+}
+
+/* ==============================
+   CABEÇALHO
+============================== */
+
+header {
+  text-align: center;
+  padding: 24px 32px;
+
+  background-color: var(--tf-superficie);
+  border-bottom: 1px solid var(--tf-borda);
+}
+
+/* ==============================
+   CONTEÚDO PRINCIPAL
+============================== */
+
 main {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 30px 40px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 30px 40px;
 }
-#input-tarefa{
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    
+
+/* ==============================
+   FORMULÁRIO
+============================== */
+
+#formulario {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 25px 0;
 }
-#controles{
+
+#input-tarefa {
+  flex: 1;
+  padding: 10px;
+
+  border-radius: 6px;
+  border: 1px solid var(--tf-borda);
+
+  background-color: var(--tf-superficie-elevada);
+  color: var(--tf-texto);
+
+  outline: none;
+}
+
+#input-tarefa:focus {
+  border-color: var(--tf-roxo);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+#input-tarefa::placeholder {
+  color: var(--tf-texto-secundario);
+}
+
+#sel-prioridade {
+  padding: 10px;
+  border-radius: 6px;
+
+  border: 1px solid var(--tf-borda);
+  background-color: var(--tf-superficie-elevada);
+  color: var(--tf-texto);
+}
+
+/* ==============================
+   CONTROLES
+============================== */
+
+#controles {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-#contadores{
-  gap: 10px;
-  display: flex;
-  color: #18cf92;
-}
-.tarefa{
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    border: 1px solid #0e9c89;
-    border-left: 4px solid #F5A623;
-    border-radius: 6px;
-}
-.tarefa{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.texto-tarefa{
-    flex: 1;
-    cursor:pointer;  /*clicável para concluir */
-}
-#formulario{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 25px 0;
-}
-footer{
-    padding: 16px; text-align: center;
-    color: #94A3B8; border-top: 1px solid #219b9b;
-}
-.tarefa.concluida{
-      text-decoration: line-through; 
-      border-left-color: #4d4d56 !important; 
-}
-#sel-prioridade{
-    padding: 10px;
-    border-radius: 6px;
-}
-#btn-adicionar{
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    background-color: #0a7465;
-    color: white;
-    cursor: pointer;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-#btn-adicionar:hover{
-    background-color: #0c8f94;
+#contadores {
+  display: flex;
+  gap: 10px;
+  color: var(--tf-roxo-claro);
+}
+
+/* ==============================
+   BOTÕES
+============================== */
+
+#btn-adicionar,
+.btn-adicionar {
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: var(--tf-roxo);
+  color: #ffffff;
+
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#btn-adicionar:hover,
+.btn-adicionar:hover {
+  background-color: var(--tf-roxo-hover);
+}
+
+#btn-adicionar:active,
+.btn-adicionar:active {
+  transform: scale(0.98);
 }
 
 #btn-deletar {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    background-color: rgb(126, 13, 0);
-    color: white;
-    cursor: pointer;
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 6px;
+
+  background-color: #991b1b;
+  color: white;
+
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 #btn-deletar:hover {
-    background-color: #ff0000;
-}
-#filtros{
-    margin: 20px 0;
+  background-color: #dc2626;
 }
 
-.btn-filtro{
-    padding: 8px 16px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* ==============================
+   TAREFAS
+============================== */
+
+.tarefa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 16px;
+  margin-bottom: 8px;
+
+  background-color: var(--tf-card);
+
+  border: 1px solid var(--tf-borda);
+  border-left: 4px solid var(--tf-roxo);
+
+  border-radius: 6px;
 }
 
-.btn-filtro.ativo{
-    background-color: #056e5d;
-    color: white;
+.texto-tarefa {
+  flex: 1;
+  cursor: pointer;
 }
 
-.btn-adicionar{
-    border-radius: 8px;
-    padding: 10px 20px;
-    border: none;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-.btn-adicionar:hover {
-  background-color: #45a049;
+.tarefa.concluida {
+  text-decoration: line-through;
+  border-left-color: #68616f !important;
+  color: var(--tf-texto-secundario);
 }
 
-.btn-adicionar:active {
-  transform: scale(0.98);
+/* ==============================
+   FILTROS
+============================== */
+
+#filtros {
+  margin: 20px 0;
+}
+
+.btn-filtro {
+  padding: 8px 16px;
+  margin: 0 5px;
+
+  border: 1px solid var(--tf-borda);
+  border-radius: 5px;
+
+  background-color: var(--tf-superficie-elevada);
+  color: var(--tf-texto-secundario);
+
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-filtro:hover {
+  border-color: var(--tf-roxo);
+  color: var(--tf-roxo-claro);
+}
+
+.btn-filtro.ativo {
+  background-color: var(--tf-roxo);
+  border-color: var(--tf-roxo);
+  color: white;
+}
+
+/* ==============================
+   RODAPÉ
+============================== */
+
+footer {
+  padding: 16px;
+  text-align: center;
+
+  color: var(--tf-texto-secundario);
+
+  border-top: 1px solid var(--tf-borda);
+  background-color: var(--tf-superficie);
+}
+
+/* ==============================
+   RESPONSIVIDADE
+============================== */
+
+@media (max-width: 600px) {
+  main {
+    padding: 20px 16px;
+  }
+
+  #formulario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #controles {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tarefa {
+    flex-wrap: wrap;
+  }
 }

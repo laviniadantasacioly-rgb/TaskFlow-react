@@ -1,10 +1,9 @@
+
 function ListaTarefas({
   tarefas,
   prioridades = [],
-  usuarios = [],
   projetos = [],
   onDeletar,
-  onConcluir,
   onEditar,
   onMover,
   colunaAnterior,
@@ -23,9 +22,6 @@ function ListaTarefas({
 
         const nomePrioridade = prioridadeTarefa?.descricao || "";
         const corPrioridade = prioridadeTarefa?.cor || "#f06509";
-        const responsavel = usuarios.find(
-          (u) => Number(u.id) === Number(tarefa.usuario_id),
-        );
 
         const projeto = projetos.find(
           (p) => Number(p.id) === Number(tarefa.projeto_id),
@@ -56,11 +52,11 @@ function ListaTarefas({
                 : "Sem prioridade"}
             </span>
 
-            {/* RESPONSÁVEL E PROJETO */}
+            {/* PROJETO */}
             <div className="detalhes-tarefa">
-              <small>Responsável: {responsavel?.nome || "Não informado"}</small>
-
-              <small>Projeto: {projeto?.nome || "Não informado"}</small>
+              <small>
+                Projeto: {projeto?.nome || "Não informado"}
+              </small>
             </div>
 
             {/* BOTÕES */}
@@ -107,4 +103,5 @@ function ListaTarefas({
     </div>
   );
 }
+
 export default ListaTarefas;

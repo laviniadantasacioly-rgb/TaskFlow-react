@@ -1,87 +1,132 @@
+/* ==============================
+   SIDEBAR - TASKFLOW
+   Tema dark roxo
+============================== */
+
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
+
   width: 220px;
   height: 100vh;
-  background-color: rgb(70, 21, 75);
+
+  background-color: #19161f;
+  border-right: 1px solid #443750;
+
   padding: 24px 16px;
+
   display: flex;
   flex-direction: column;
+
   z-index: 1000;
   box-sizing: border-box;
 }
 
+/* ==============================
+   TÍTULO DA SIDEBAR
+============================== */
+
 .sidebar h1 {
   margin-bottom: 20px;
-  color: white;
+  color: #f8f7fa;
 }
+
+/* ==============================
+   LINKS
+============================== */
 
 .sidebar a {
   display: block;
   width: 100%;
+
   padding: 12px 14px;
   margin-bottom: 8px;
-  color: #ddd;
+
+  color: #b9b2c6;
   text-decoration: none;
+
   border-radius: 7px;
   transition: 0.2s;
 }
 
 .sidebar a:hover {
-  background-color: #8b168f;
-  color: white;
+  background-color: #30283d;
+  color: #ffffff;
 }
 
 .sidebar a.active {
-  background-color: #7b126f;
-  color: white;
+  background-color: #3b2856;
+  color: #c4b5fd;
   font-weight: bold;
+  border-left: 3px solid #8b5cf6;
 }
 
-
-/* BOTÃO SAIR */
+/* ==============================
+   BOTÃO SAIR
+============================== */
 
 .sidebar button {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
+
   border: none;
   border-radius: 8px;
-  background-color: #a009b8;
+
+  background-color: #7c3aed;
   color: white;
+
   font-size: 16px;
   font-weight: bold;
+
   cursor: pointer;
   transition: 0.2s;
 }
 
 .sidebar button:hover {
-  background-color: #c018d0;
+  background-color: #8b5cf6;
 }
 
+/* ==============================
+   LOGO
+============================== */
 
 .logo h1 {
   margin: 0;
-  color: white;
+
+  color: #c4b5fd;
   font-size: 1.5rem;
 }
 
+/* ==============================
+   NAVEGAÇÃO
+============================== */
+
 .nav {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+/* ==============================
+   LINKS DE NAVEGAÇÃO
+============================== */
+
 .link {
   display: block;
   width: 100%;
-  color: #ddd;
+
+  color: #b9b2c6;
   text-decoration: none;
+
   padding: 12px 14px;
   border-radius: 6px;
+
   font-size: 0.95rem;
+
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
@@ -89,35 +134,48 @@
 }
 
 .link:hover {
-  background-color: #460a46;
-  color: #e2e8f0;
+  background-color: #30283d;
+  color: #ffffff;
   transform: translateX(3px);
 }
 
+/* Link ativo */
 .ativo {
-  background-color: #6e1c75;
-  color: #e838f8;
+  background-color: #3b2856;
+  color: #c4b5fd;
   font-weight: bold;
+
+  border-left: 3px solid #8b5cf6;
 }
+
+/* ==============================
+   BOTÃO SAIR
+============================== */
 
 .botaoSair {
   width: 100%;
   padding: 12px;
   margin-top: auto;
-  border: none;
+
+  border: 1px solid #443750;
   border-radius: 8px;
-  background-color: #a010ad;
-  color: white;
+
+  background-color: #24212b;
+  color: #c4b5fd;
+
   font-size: 16px;
   font-weight: bold;
   text-align: center;
+
   cursor: pointer;
+
   transition:
     background-color 0.2s ease,
     transform 0.15s ease;
 }
 
 .botaoSair:hover {
+  background-color: #3b2856;
   transform: translateY(-1px);
 }
 
@@ -125,9 +183,11 @@
   transform: scale(0.97);
 }
 
+/* ==============================
+   RESPONSIVIDADE
+============================== */
 
 @media (max-width: 500px) {
-
   .sidebar {
     width: 180px;
     padding: 20px 12px;
