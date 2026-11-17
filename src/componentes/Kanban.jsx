@@ -4,6 +4,7 @@ import api, { mensagensDeErro } from "../api";
 import ModalTarefa from "./ModalTarefa";
 import ListaTarefas from "./ListaTarefas";
 import ModalPrioridade from "./ModalPrioridade";
+import PainelComentarios from "../componentes/PainelComentarios";
 
 function Kanban() {
   // ==========================================
@@ -17,10 +18,26 @@ function Kanban() {
   const [usuarios, setUsuarios] = useState([]);
   const [projetos, setProjetos] = useState([]);
 
+  // ==========================================
+  // COMENTÁRIOS
+  // ==========================================
+
+  const [painelComentariosAberto, setPainelComentariosAberto] = useState(false);
+
+  const [tarefaComentarios, setTarefaComentarios] = useState(null);
+  const [comentarios, setComentarios] = useState([]);
+  const [carregandoComentarios, setCarregandoComentarios] = useState(false);
+  const [enviandoComentario, setEnviandoComentario] = useState(false);
+
+  // ==========================================
+  // PRIORIDADES
+  // ==========================================
+
   const [modalPrioridadeAberto, setModalPrioridadeAberto] = useState(false);
   const [prioridadeEditando, setPrioridadeEditando] = useState(null);
+
   // ==========================================
-  // MODAL
+  // MODAL DE TAREFA
   // ==========================================
 
   const [modalAberto, setModalAberto] = useState(false);
@@ -28,10 +45,14 @@ function Kanban() {
   const [colunaAtiva, setColunaAtiva] = useState("afazer");
 
   // ==========================================
-  // FORMULÁRIO
+  // FILTRO
   // ==========================================
 
-  // const [prioridade, setPrioridade] = useState("media");
+  const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
+
+  // ==========================================
+  // CADASTRAR PRIORIDADE
+  // ==========================================
 
   async function cadastrarPrioridade(novaPrioridade) {
     setPrioridades((atuais) => {
@@ -61,7 +82,10 @@ function Kanban() {
     setPrioridadeEditando(null);
   }
 
+  // ==========================================
   // EXCLUIR PRIORIDADE
+  // ==========================================
+
   async function excluirPrioridade(prioridade) {
     const confirmar = window.confirm(
       `Deseja excluir a prioridade "${prioridade.descricao}"?`,
@@ -85,66 +109,68 @@ function Kanban() {
   }
 
   // ==========================================
-  // FILTRO
+  // COMENTÁRIOS
   // ==========================================
 
-  const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
+  async function abrirComentarios(tarefa) {
+    setTarefaComentarios(tarefa);
+    setPainelComentariosAberto(true);
+    setComentarios([]);
+    setCarregandoComentarios(true);
 
-  // ==========================================
-  // CARREGAR TAREFAS API
-  // ==========================================
+    try {
+      const resposta = await api.get(`/comentarios/tarefa/${tarefa.id}`);
 
-  useEffect(() => {
-    async function carregarDados() {
-      try {
-        setCarregando(true);
-        setErro("");
-
-        const [resTarefas, resPrioridades, resUsuarios, resProjetos] =
-          await Promise.all([
-            api.get("/tarefas"),
-            api.get("/prioridades"),
-            api.get("/usuarios"),
-            api.get("/projetos"),
-          ]);
-
-        setPrioridades(resPrioridades.data);
-        setTarefas(resTarefas.data);
-        setUsuarios(resUsuarios.data);
-        setProjetos(resProjetos.data);
-      } catch (e) {
-        setErro("Erro ao carregar os dados. Verifique a conexão com a API.");
-        console.error("Erro ao carregar dados:", e);
-      } finally {
-        setCarregando(false);
-      }
+      setComentarios(resposta.data);
+    } catch (err) {
+      setErro(mensagensDeErro(err).join(" "));
+    } finally {
+      setCarregandoComentarios(false);
     }
+  }
 
-    carregarDados();
-  }, []);
+  function fecharComentarios() {
+    setPainelComentariosAberto(false);
+    setTarefaComentarios(null);
+    setComentarios([]);
+  }
 
-  // ==========================================
-  // TÍTULO DA ABA
-  // ==========================================
+  async function enviarComentario(texto) {
+    if (!tarefaComentarios) return false;
 
-  useEffect(() => {
-    const quantidadeAFazer = tarefas.filter(
-      (tarefa) => tarefa.coluna === "afazer" || tarefa.coluna === "andamento",
-    ).length;
+    try {
+      setEnviandoComentario(true);
 
-    if (quantidadeAFazer > 0) {
-      document.title = `(${quantidadeAFazer}) TaskFlow`;
-    } else {
-      document.title = "TaskFlow";
+      const resposta = await api.post(
+        `/comentarios/tarefa/${tarefaComentarios.id}`,
+        { texto },
+      );
+
+      setComentarios((atuais) => [...atuais, resposta.data]);
+
+      return true;
+    } catch (err) {
+      setErro(mensagensDeErro(err).join(" "));
+      return false;
+    } finally {
+      setEnviandoComentario(false);
     }
+  }
 
-    return () => {
-      document.title = "TaskFlow";
-    };
-  }, [tarefas]);
+  async function excluirComentario(comentarioId) {
+    try {
+      await api.delete(`/comentarios/${comentarioId}`);
+
+      setComentarios((atuais) =>
+        atuais.filter((comentario) => comentario.id !== comentarioId),
+      );
+    } catch (err) {
+      setErro(mensagensDeErro(err).join(" "));
+    }
+  }
 
   // ==========================================
-  // ABRIR MODAL PARA CRIAR
+  // ABRIR MODAL PARA CRIAR TAREFA
   // ==========================================
 
   function abrirModalCriar(coluna) {
@@ -154,17 +180,16 @@ function Kanban() {
   }
 
   // ==========================================
-  // ABRIR MODAL PARA EDITAR
+  // ABRIR MODAL PARA EDITAR TAREFA
   // ==========================================
 
   function abrirModalEditar(tarefa) {
     setTarefaEditando(tarefa);
-    // setColunaAtiva(tarefa.coluna);
     setModalAberto(true);
   }
 
   // ==========================================
-  // SALVAR TAREFA DO MODAL -editar tarefa
+  // SALVAR TAREFA
   // ==========================================
 
   async function salvarTarefa(dados) {
@@ -252,7 +277,60 @@ function Kanban() {
   }
 
   // ==========================================
-  // FILTRO
+  // CARREGAR DADOS DA API
+  // ==========================================
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        setCarregando(true);
+        setErro("");
+
+        const [resTarefas, resPrioridades, resUsuarios, resProjetos] =
+          await Promise.all([
+            api.get("/tarefas"),
+            api.get("/prioridades"),
+            api.get("/usuarios"),
+            api.get("/projetos"),
+          ]);
+
+        setPrioridades(resPrioridades.data);
+        setTarefas(resTarefas.data);
+        setUsuarios(resUsuarios.data);
+        setProjetos(resProjetos.data);
+      } catch (e) {
+        setErro("Erro ao carregar os dados. Verifique a conexão com a API.");
+        console.error("Erro ao carregar dados:", e);
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarDados();
+  }, []);
+
+  // ==========================================
+  // TÍTULO DA ABA
+  // ==========================================
+
+  useEffect(() => {
+    const quantidadeAFazer = tarefas.filter(
+      (tarefa) => tarefa.coluna === "afazer" || tarefa.coluna === "andamento",
+    ).length;
+
+    if (quantidadeAFazer > 0) {
+      document.title = `(${quantidadeAFazer}) TaskFlow`;
+    } else {
+      document.title = "TaskFlow";
+    }
+
+    return () => {
+      document.title = "TaskFlow";
+    };
+  }, [tarefas]);
+
+  // ==========================================
+  // FILTRO DE TAREFAS
   // ==========================================
 
   const tarefasFiltradas = tarefas.filter((tarefa) => {
@@ -270,16 +348,6 @@ function Kanban() {
   // ==========================================
   // CONTADORES
   // ==========================================
-
-  // const totalTarefas = tarefas.length;
-
-  // const tarefasPendentes = tarefas.filter(
-  //   (tarefa) => tarefa.coluna !== "concluido",
-  // ).length;
-
-  // const tarefasConcluidas = tarefas.filter(
-  //   (tarefa) => tarefa.coluna === "concluido",
-  // ).length;
 
   const quantidadeAFazer = tarefas.filter(
     (tarefa) => tarefa.coluna === "afazer",
@@ -307,6 +375,7 @@ function Kanban() {
             Carregando tarefas...
           </p>
         )}
+
         {erro && (
           <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>
         )}
@@ -329,6 +398,7 @@ function Kanban() {
           </div>
 
           <label>Filtrar por prioridade:</label>
+
           <select
             value={filtroPrioridade}
             onChange={(e) => setFiltroPrioridade(e.target.value)}
@@ -352,9 +422,7 @@ function Kanban() {
         ================================== */}
 
         <section className="kanban">
-          {/* ==================================
-              A FAZER
-          ================================== */}
+          {/* A FAZER */}
 
           <div className="kanban-coluna">
             <div className="kanban-coluna-header">
@@ -383,14 +451,13 @@ function Kanban() {
               onConcluir={concluirTarefa}
               onEditar={abrirModalEditar}
               onMover={moverTarefa}
+              onAbrirComentarios={abrirComentarios}
               colunaAnterior={null}
               colunaProxima="andamento"
             />
           </div>
 
-          {/* ==================================
-              EM ANDAMENTO
-          ================================== */}
+          {/* EM ANDAMENTO */}
 
           <div className="kanban-coluna">
             <div className="kanban-coluna-header">
@@ -419,14 +486,13 @@ function Kanban() {
               onConcluir={concluirTarefa}
               onEditar={abrirModalEditar}
               onMover={moverTarefa}
+              onAbrirComentarios={abrirComentarios}
               colunaAnterior="afazer"
               colunaProxima="concluido"
             />
           </div>
 
-          {/* ==================================
-              CONCLUÍDO
-          ================================== */}
+          {/* CONCLUÍDO */}
 
           <div className="kanban-coluna">
             <div className="kanban-coluna-header">
@@ -455,6 +521,7 @@ function Kanban() {
               onConcluir={concluirTarefa}
               onEditar={abrirModalEditar}
               onMover={moverTarefa}
+              onAbrirComentarios={abrirComentarios}
               colunaAnterior="andamento"
               colunaProxima={null}
             />
@@ -462,6 +529,7 @@ function Kanban() {
         </section>
 
         {/* LEGENDA DE PRIORIDADES */}
+
         <section className="legenda-prioridades">
           <div className="legenda-prioridades-cabecalho">
             <div>
@@ -507,9 +575,8 @@ function Kanban() {
           </div>
         </section>
 
-        {/* ==================================
-          MODAL
-      ================================== */}
+        {/* MODAL DE TAREFA */}
+
         <ModalTarefa
           aberto={modalAberto}
           onFechar={() => setModalAberto(false)}
@@ -520,6 +587,9 @@ function Kanban() {
           usuarios={usuarios}
           projetos={projetos}
         />
+
+        {/* MODAL DE PRIORIDADE */}
+
         <ModalPrioridade
           aberto={modalPrioridadeAberto}
           onFechar={() => {
@@ -530,11 +600,22 @@ function Kanban() {
           prioridadeEditando={prioridadeEditando}
           onEditada={atualizarPrioridade}
         />
+
+        {/* PAINEL DE COMENTÁRIOS */}
+
+        <PainelComentarios
+          aberto={painelComentariosAberto}
+          tarefa={tarefaComentarios}
+          comentarios={comentarios}
+          carregando={carregandoComentarios}
+          enviando={enviandoComentario}
+          onFechar={fecharComentarios}
+          onEnviar={enviarComentario}
+          onExcluir={excluirComentario}
+        />
       </main>
 
-      {/* ==================================
-          RODAPÉ
-      ================================== */}
+      {/* RODAPÉ */}
 
       <footer>
         <p>TaskFlow 2026 - Lavínia D Acioly</p>

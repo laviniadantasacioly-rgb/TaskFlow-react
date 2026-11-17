@@ -1,4 +1,3 @@
-
 function ListaTarefas({
   tarefas,
   prioridades = [],
@@ -8,6 +7,7 @@ function ListaTarefas({
   onMover,
   colunaAnterior,
   colunaProxima,
+  onAbrirComentarios,
 }) {
   if (tarefas.length === 0) {
     return <p className="msg-vazia">Nenhuma tarefa nesta coluna.</p>;
@@ -54,9 +54,7 @@ function ListaTarefas({
 
             {/* PROJETO */}
             <div className="detalhes-tarefa">
-              <small>
-                Projeto: {projeto?.nome || "Não informado"}
-              </small>
+              <small>Projeto: {projeto?.nome || "Não informado"}</small>
             </div>
 
             {/* BOTÕES */}
@@ -95,6 +93,13 @@ function ListaTarefas({
                 title="Excluir tarefa"
               >
                 🗑️
+              </button>
+              <button
+                type="button"
+                onClick={() => onAbrirComentarios?.(tarefa)}
+                title="Comentários"
+              >
+                💬
               </button>
             </div>
           </div>
